@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { SneakerCollection } from '@/components/sneakers/SneakerCollection'
 
 export const metadata: Metadata = {
   title: 'Dashboard - SoleFolio',
@@ -17,7 +18,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* My Collection Card */}
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center">
@@ -76,27 +77,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Activity Feed */}
-        <div className="mt-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Activity</h2>
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6 text-center text-gray-500">
-              <span className="text-4xl mb-4 block">📱</span>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No activity yet</h3>
-              <p className="text-gray-500 mb-4">
-                Start building your collection or follow other collectors to see activity here.
-              </p>
-              <div className="space-x-4">
-                <button className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
-                  Add Your First Sneaker
-                </button>
-                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50">
-                  Discover Collections
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Sneaker Collection */}
+        <SneakerCollection />
       </div>
     </div>
   )
