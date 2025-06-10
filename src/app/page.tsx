@@ -1,30 +1,15 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Navbar } from '@/components/layout/Navbar'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <header className="px-4 lg:px-6 h-14 flex items-center backdrop-blur-sm">
-        <Link className="flex items-center justify-center" href="#">
-          <span className="text-2xl font-bold text-white">SoleFolio</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium text-white hover:underline underline-offset-4" href="#features">
-            Features
-          </Link>
-          <Link className="text-sm font-medium text-white hover:underline underline-offset-4" href="#about">
-            About
-          </Link>
-          <Link className="text-sm font-medium text-white hover:underline underline-offset-4" href="/login">
-            Login
-          </Link>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* Hero Section */}
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 mt-16">
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
@@ -40,8 +25,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
-                  Get Started
+                <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
+                  <Link href="/signup">Get Started</Link>
                 </Button>
                 <Button variant="outline" className="text-white border-white hover:bg-white hover:text-black">
                   Learn More
