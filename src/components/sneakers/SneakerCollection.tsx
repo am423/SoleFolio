@@ -8,6 +8,7 @@ import { SneakerCard } from './SneakerCard'
 import { SneakerSearchDialog } from './SneakerSearchDialog'
 import { AddSneakerDialog } from './AddSneakerDialog'
 import { SneakerDetailDialog } from './SneakerDetailDialog'
+import { MakeOfferDialog } from '@/components/offers/MakeOfferDialog'
 import { useAuthContext } from '@/components/auth/AuthProvider'
 import { sneakerAPI } from '@/lib/api/sneakers'
 import { UserSneakerWithDetails, Sneaker } from '@/lib/database.types'
@@ -31,6 +32,7 @@ export function SneakerCollection({ userId, showAddButton = true, title = "My Co
   const [showSearchDialog, setShowSearchDialog] = useState(false)
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [showDetailDialog, setShowDetailDialog] = useState(false)
+  const [showOfferDialog, setShowOfferDialog] = useState(false)
   const [selectedSneaker, setSelectedSneaker] = useState<Sneaker | null>(null)
   const [selectedUserSneaker, setSelectedUserSneaker] = useState<UserSneakerWithDetails | null>(null)
 
@@ -70,8 +72,8 @@ export function SneakerCollection({ userId, showAddButton = true, title = "My Co
   }
 
   const handleOfferSneaker = (userSneaker: UserSneakerWithDetails) => {
-    // TODO: Implement offer dialog
-    console.log('Make offer on:', userSneaker)
+    setSelectedUserSneaker(userSneaker)
+    setShowOfferDialog(true)
   }
 
   const filteredSneakers = sneakers.filter(sneaker => {
@@ -264,6 +266,15 @@ export function SneakerCollection({ userId, showAddButton = true, title = "My Co
         }}
         userSneaker={selectedUserSneaker}
         onOffer={handleOfferSneaker}
+      />
+
+      <MakeOfferDialog
+        open={showOfferDialog}
+        onClose={() => {
+          setShowOfferDialog(false)
+          setSelectedUserSneaker(null)
+        }}
+        userSneaker={selectedUserSneaker}
       />
     </div>
   )

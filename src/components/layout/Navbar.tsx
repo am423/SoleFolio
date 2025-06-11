@@ -14,7 +14,8 @@ import {
   Settings, 
   PlusCircle,
   Menu,
-  X
+  X,
+  DollarSign
 } from 'lucide-react'
 
 export function Navbar() {
@@ -71,6 +72,12 @@ export function Navbar() {
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/add-sneaker">
                     <PlusCircle className="h-5 w-5" />
+                  </Link>
+                </Button>
+                
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href="/offers">
+                    <DollarSign className="h-5 w-5" />
                   </Link>
                 </Button>
                 
@@ -180,6 +187,14 @@ export function Navbar() {
                 >
                   <PlusCircle className="mr-3 h-5 w-5" />
                   Add Sneaker
+                </Link>
+                <Link
+                  href="/offers"
+                  className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <DollarSign className="mr-3 h-5 w-5" />
+                  Offers
                 </Link>
                 <Link
                   href="/notifications"
