@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuthContext } from '@/components/auth/AuthProvider'
+import { notificationsAPI } from '@/lib/api/notifications'
 import { 
   Search, 
   Bell, 
@@ -22,8 +23,43 @@ import {
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [unreadCount, setUnreadCount] = useState(0)
   const { user, userProfile, signOut } = useAuthContext()
   const router = useRouter()
+
+  // Load notification count when user logs in
+  useEffect(() => {
+    if (userProfile) {
+      loadUnreadCount()
+      subscribeToNotifications()
+    }
+  }, [userProfile])
+
+  const loadUnreadCount = async () => {
+    try {
+      const { data } = await notificationsAPI.getUnreadCount()
+      setUnreadCount(data || 0)
+    } catch (error) {
+      console.error('Error loading unread count:', error)
+    }
+  }
+
+  const subscribeToNotifications = () => {
+    if (!userProfile) return
+
+    const channel = notificationsAPI.subscribeToNotifications(
+      userProfile.id,
+      (payload) => {
+        if (payload.eventType === 'INSERT') {
+          setUnreadCount(prev => prev + 1)
+        }
+      }
+    )
+
+    return () => {
+      channel.unsubscribe()
+    }
+  }
 
   const handleSignOut = async () => {
     await signOut()
@@ -88,9 +124,14 @@ export function Navbar() {
                   </Link>
                 </Button>
                 
-                <Button variant="ghost" size="icon" asChild>
+                <Button variant="ghost" size="icon" asChild className="relative">
                   <Link href="/notifications">
                     <Bell className="h-5 w-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
+                    )}
                   </Link>
                 </Button>
                 
@@ -213,11 +254,18 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/notifications"
-                  className="flex items-center px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  className="flex items-center justify-between px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <Bell className="mr-3 h-5 w-5" />
-                  Notifications
+                  <div className="flex items-center">
+                    <Bell className="mr-3 h-5 w-5" />
+                    Notifications
+                  </div>
+                  {unreadCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href={`/profile/${userProfile?.username}`}
