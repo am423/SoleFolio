@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:vercel": "node scripts/deploy-vercel.js",
+    "deploy:supabase": "node scripts/setup-supabase.js",
+    "deploy:full": "node scripts/deploy-full.js"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
