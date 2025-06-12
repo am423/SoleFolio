@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { OfferWithDetails } from '@/lib/database.types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { CounterOfferDialog } from './CounterOfferDialog'
 import { 
   DollarSign, 
   Clock, 
@@ -12,7 +13,8 @@ import {
   Check, 
   X, 
   RotateCcw,
-  Calendar
+  Calendar,
+  ArrowRightLeft
 } from 'lucide-react'
 import { offerAPI } from '@/lib/api/offers'
 import { useAuthContext } from '@/components/auth/AuthProvider'
@@ -42,6 +44,7 @@ const statusLabels = {
 export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
   const { userProfile } = useAuthContext()
   const [loading, setLoading] = useState<string | null>(null)
+  const [showCounterOffer, setShowCounterOffer] = useState(false)
 
   const handleStatusUpdate = async (status: 'accepted' | 'declined' | 'withdrawn') => {
     setLoading(status)
@@ -184,6 +187,20 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
                 </Button>
               )}
 
+              {/* Counter-offer button - only for received offers */}
+              {type === 'received' && canDecline && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowCounterOffer(true)}
+                  disabled={!!loading}
+                  className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                >
+                  <ArrowRightLeft className="w-4 h-4 mr-1" />
+                  Counter
+                </Button>
+              )}
+
               {canWithdraw && (
                 <Button
                   size="sm"
@@ -206,16 +223,6 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
                 </Button>
               )}
 
-              {canDecline && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                >
-                  <MessageSquare className="w-4 h-4 mr-1" />
-                  Counter
-                </Button>
-              )}
             </div>
           )}
 
@@ -246,6 +253,17 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
           )}
         </div>
       </div>
+
+      {/* Counter-offer Dialog */}
+      <CounterOfferDialog
+        open={showCounterOffer}
+        onClose={() => setShowCounterOffer(false)}
+        originalOffer={offer}
+        onSuccess={() => {
+          setShowCounterOffer(false)
+          onUpdate?.()
+        }}
+      />
     </div>
   )
 }

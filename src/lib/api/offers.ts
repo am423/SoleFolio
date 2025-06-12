@@ -1,40 +1,78 @@
 import { supabase } from '@/lib/supabase'
 import { Offer, OfferWithDetails } from '@/lib/database.types'
 
+interface CreateOfferParams {
+  user_sneaker_id: string
+  buyer_id: string
+  seller_id: string
+  amount: number
+  message?: string
+  expires_at: string
+  parent_offer_id?: string
+}
+
 export const offerAPI = {
-  // Create a new offer
-  async createOffer(userSneakerId: string, amount: number, message?: string) {
+  // Create a new offer with overloaded signatures
+  async createOffer(
+    userSneakerIdOrParams: string | CreateOfferParams, 
+    amount?: number, 
+    message?: string
+  ) {
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
       return { data: null, error: new Error('User not authenticated') }
     }
 
-    // First get the user_sneaker to find the seller
-    const { data: userSneaker, error: sneakerError } = await supabase
-      .from('user_sneakers')
-      .select('user_id')
-      .eq('id', userSneakerId)
-      .single()
+    let offerData: any
 
-    if (sneakerError || !userSneaker) {
-      return { data: null, error: sneakerError || new Error('Sneaker not found') }
-    }
+    // Handle both function signatures
+    if (typeof userSneakerIdOrParams === 'string') {
+      // Simple version - create regular offer
+      const userSneakerId = userSneakerIdOrParams
 
-    // Create the offer
-    const { data, error } = await supabase
-      .from('offers')
-      .insert({
+      // First get the user_sneaker to find the seller
+      const { data: userSneaker, error: sneakerError } = await supabase
+        .from('user_sneakers')
+        .select('user_id')
+        .eq('id', userSneakerId)
+        .single()
+
+      if (sneakerError || !userSneaker) {
+        return { data: null, error: sneakerError || new Error('Sneaker not found') }
+      }
+
+      offerData = {
         user_sneaker_id: userSneakerId,
         buyer_id: user.id,
         seller_id: userSneaker.user_id,
         amount,
         message,
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-      })
+      }
+    } else {
+      // Advanced version - create counter-offer with provided params
+      offerData = {
+        user_sneaker_id: userSneakerIdOrParams.user_sneaker_id,
+        buyer_id: userSneakerIdOrParams.buyer_id,
+        seller_id: userSneakerIdOrParams.seller_id,
+        amount: userSneakerIdOrParams.amount,
+        message: userSneakerIdOrParams.message,
+        expires_at: userSneakerIdOrParams.expires_at,
+        parent_offer_id: userSneakerIdOrParams.parent_offer_id,
+      }
+    }
+
+    // Create the offer
+    const { data, error } = await supabase
+      .from('offers')
+      .insert(offerData)
       .select(`
         *,
-        user_sneaker:user_sneakers(*),
+        user_sneaker:user_sneakers(
+          *,
+          sneaker:sneakers(*)
+        ),
         buyer:users(*),
         seller:users(*)
       `)
