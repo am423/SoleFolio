@@ -115,13 +115,22 @@ export const socialAPI = {
 
   // Get user profile by username
   async getUserByUsername(username: string) {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('username', username)
-      .single()
+    // During build time, return null to prevent build failures
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      return { data: null, error: new Error('Supabase not configured') }
+    }
 
-    return { data, error }
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', username)
+        .single()
+
+      return { data, error }
+    } catch (error) {
+      return { data: null, error: error as Error }
+    }
   },
 
   // Get popular users (by follower count)
