@@ -266,7 +266,6 @@ export function CounterOfferDialog({ open, onClose, originalOffer, onSuccess }: 
           <Button
             onClick={handleSubmit}
             disabled={loading}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
           >
             {loading ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />

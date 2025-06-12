@@ -2,6 +2,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 export default function DebugPage() {
   const [testResult, setTestResult] = useState<string>('')
@@ -73,18 +74,12 @@ export default function DebugPage() {
         <div className="bg-gray-50 p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-3">Connection Tests</h2>
           <div className="space-x-2 mb-4">
-            <button
-              onClick={testSupabaseConnection}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
+            <Button onClick={testSupabaseConnection}>
               Test Supabase
-            </button>
-            <button
-              onClick={testAuth}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            >
+            </Button>
+            <Button onClick={testAuth} variant="secondary">
               Test Auth
-            </button>
+            </Button>
           </div>
           {testResult && (
             <div className="bg-white p-3 rounded border">

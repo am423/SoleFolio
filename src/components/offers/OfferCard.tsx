@@ -147,9 +147,9 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
               {canAccept && (
                 <Button
                   size="sm"
+                  variant="success"
                   onClick={() => handleStatusUpdate('accepted')}
                   disabled={loading === 'accepted'}
-                  className="bg-green-600 hover:bg-green-700"
                 >
                   {loading === 'accepted' ? (
                     <span className="flex items-center gap-1">
@@ -168,10 +168,9 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
               {canDecline && (
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="destructive"
                   onClick={() => handleStatusUpdate('declined')}
                   disabled={loading === 'declined'}
-                  className="border-red-200 text-red-600 hover:bg-red-50"
                 >
                   {loading === 'declined' ? (
                     <span className="flex items-center gap-1">
@@ -194,7 +193,6 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
                   variant="outline"
                   onClick={() => setShowCounterOffer(true)}
                   disabled={!!loading}
-                  className="border-purple-200 text-purple-600 hover:bg-purple-50"
                 >
                   <ArrowRightLeft className="w-4 h-4 mr-1" />
                   Counter
@@ -204,10 +202,9 @@ export function OfferCard({ offer, type, onUpdate }: OfferCardProps) {
               {canWithdraw && (
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => handleStatusUpdate('withdrawn')}
                   disabled={loading === 'withdrawn'}
-                  className="border-gray-200 text-gray-600 hover:bg-gray-50"
                 >
                   {loading === 'withdrawn' ? (
                     <span className="flex items-center gap-1">

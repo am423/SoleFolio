@@ -265,7 +265,7 @@ export function MakeOfferDialog({ open, onClose, userSneaker }: MakeOfferDialogP
             <Button 
               type="submit" 
               disabled={loading || !amount}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+              variant="success"
             >
               {loading ? (
                 <>

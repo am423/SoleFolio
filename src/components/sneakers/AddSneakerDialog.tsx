@@ -302,7 +302,6 @@ export function AddSneakerDialog({ open, onClose, sneaker }: AddSneakerDialogPro
             <Button 
               type="submit" 
               disabled={loading || !size}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
             >
               {loading ? (
                 <>

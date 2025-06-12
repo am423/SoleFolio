@@ -184,11 +184,6 @@ export default function DiscoverPage() {
             size="sm"
             variant={followStates[user.id] ? "outline" : "default"}
             onClick={() => handleFollowToggle(user.id)}
-            className={
-              followStates[user.id]
-                ? "border-gray-300 text-gray-700 hover:border-red-300 hover:text-red-700"
-                : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-            }
           >
             {followStates[user.id] ? (
               <>

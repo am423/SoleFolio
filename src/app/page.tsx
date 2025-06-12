@@ -25,10 +25,10 @@ export default function Home() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button asChild className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
+                <Button asChild>
                   <Link href="/signup">Get Started</Link>
                 </Button>
-                <Button variant="outline" className="text-white border-white hover:bg-white hover:text-black">
+                <Button variant="outline">
                   Learn More
                 </Button>
               </div>
