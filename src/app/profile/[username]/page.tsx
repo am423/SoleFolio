@@ -10,6 +10,14 @@ interface ProfilePageProps {
 }
 
 export async function generateMetadata({ params }: ProfilePageProps): Promise<Metadata> {
+  // During build time, skip API calls to prevent build failures
+  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
+    return {
+      title: `${params.username} - SoleFolio`,
+      description: `Check out ${params.username}'s sneaker collection on SoleFolio`,
+    }
+  }
+
   try {
     const { data: user } = await socialAPI.getUserByUsername(params.username)
     
@@ -37,11 +45,17 @@ export async function generateMetadata({ params }: ProfilePageProps): Promise<Me
   } catch (error) {
     return {
       title: 'Profile - SoleFolio',
+      description: 'SoleFolio - The Instagram for Sneakerheads',
     }
   }
 }
 
 async function getUser(username: string) {
+  // During build time, return null to prevent build failures
+  if (process.env.NODE_ENV === 'production' && !process.env.VERCEL_ENV) {
+    return null
+  }
+
   try {
     const { data: user, error } = await socialAPI.getUserByUsername(username)
     if (error || !user) {
