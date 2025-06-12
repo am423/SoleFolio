@@ -7,15 +7,25 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 // Create a safe client creation function that handles missing environment variables
 function createSupabaseClient() {
+  // Check if we're in a browser environment and have real credentials
+  const isClient = typeof window !== 'undefined'
+  
   // During build time or when environment variables are missing, create a dummy client
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('Supabase environment variables not found, creating dummy client')
+    if (isClient) {
+      console.error('Supabase environment variables not found in browser')
+    }
     return createClient('https://dummy.supabase.co', 'dummy-key', {
       auth: {
         autoRefreshToken: false,
         persistSession: false
       }
     })
+  }
+
+  // Log successful connection in development
+  if (isClient && process.env.NODE_ENV === 'development') {
+    console.log('✅ Supabase client initialized:', supabaseUrl)
   }
 
   return createClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -28,9 +38,24 @@ function createSupabaseClient() {
 }
 
 function createSupabaseAdminClient() {
+  const isClient = typeof window !== 'undefined'
+  
   // During build time or when environment variables are missing, create a dummy client
   if (!supabaseUrl || !supabaseServiceRoleKey) {
-    console.warn('Supabase admin environment variables not found, creating dummy client')
+    if (isClient) {
+      console.warn('Supabase admin environment variables not found, using anon key')
+    }
+    
+    // Fallback to regular client if service role key is missing
+    if (supabaseUrl && supabaseAnonKey) {
+      return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      })
+    }
+    
     return createClient('https://dummy.supabase.co', 'dummy-key', {
       auth: {
         autoRefreshToken: false,

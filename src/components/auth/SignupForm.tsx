@@ -54,15 +54,36 @@ export function SignupForm() {
     }
 
     try {
+      console.log('🔄 Starting signup process...')
       const { error } = await signUp(email, password, username, fullName)
       
       if (error) {
-        setError(error.message)
+        console.error('❌ Signup error:', error)
+        
+        // Provide more user-friendly error messages
+        if (error.message.includes('Failed to fetch')) {
+          setError('Connection error. Please check your internet connection and try again.')
+        } else if (error.message.includes('User already registered')) {
+          setError('An account with this email already exists.')
+        } else if (error.message.includes('Invalid email')) {
+          setError('Please enter a valid email address.')
+        } else if (error.message.includes('Password')) {
+          setError('Password is too weak. Please choose a stronger password.')
+        } else {
+          setError(error.message)
+        }
       } else {
+        console.log('✅ Signup successful!')
         router.push('/dashboard')
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      console.error('❌ Unexpected signup error:', err)
+      
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError('Network error. Please check your connection and try again.')
+      } else {
+        setError('An unexpected error occurred. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
