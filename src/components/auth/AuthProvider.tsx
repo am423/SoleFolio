@@ -13,6 +13,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<any>
   signOut: () => Promise<any>
   updateProfile: (updates: Partial<UserProfile>) => Promise<any>
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)

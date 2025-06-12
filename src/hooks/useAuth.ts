@@ -103,6 +103,12 @@ export function useAuth() {
     return { data, error }
   }
 
+  const refreshProfile = async () => {
+    if (user) {
+      await fetchUserProfile(user.id)
+    }
+  }
+
   return {
     user,
     userProfile,
@@ -111,5 +117,6 @@ export function useAuth() {
     signIn,
     signOut,
     updateProfile,
+    refreshProfile,
   }
 }
