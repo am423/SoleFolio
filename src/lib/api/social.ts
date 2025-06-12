@@ -62,15 +62,7 @@ export const socialAPI = {
     const { data, error } = await supabase
       .from('follows')
       .select(`
-        follower:users(
-          id,
-          username,
-          full_name,
-          avatar_url,
-          bio,
-          follower_count,
-          sneaker_count
-        )
+        follower:users(*)
       `)
       .eq('following_id', userId)
       .range(offset, offset + limit - 1)
@@ -84,15 +76,7 @@ export const socialAPI = {
     const { data, error } = await supabase
       .from('follows')
       .select(`
-        following:users(
-          id,
-          username,
-          full_name,
-          avatar_url,
-          bio,
-          follower_count,
-          sneaker_count
-        )
+        following:users(*)
       `)
       .eq('follower_id', userId)
       .range(offset, offset + limit - 1)
@@ -122,7 +106,7 @@ export const socialAPI = {
   async searchUsers(query: string, limit = 10) {
     const { data, error } = await supabase
       .from('users')
-      .select('id, username, full_name, avatar_url, bio, follower_count, sneaker_count')
+      .select('*')
       .or(`username.ilike.%${query}%,full_name.ilike.%${query}%`)
       .limit(limit)
 
@@ -144,7 +128,7 @@ export const socialAPI = {
   async getPopularUsers(limit = 10) {
     const { data, error } = await supabase
       .from('users')
-      .select('id, username, full_name, avatar_url, bio, follower_count, sneaker_count')
+      .select('*')
       .order('follower_count', { ascending: false })
       .limit(limit)
 
@@ -182,7 +166,7 @@ export const socialAPI = {
     // Get users that the current user is not following, ordered by follower count
     const { data, error } = await supabase
       .from('users')
-      .select('id, username, full_name, avatar_url, bio, follower_count, sneaker_count')
+      .select('*')
       .neq('id', user.id)
       .not('id', 'in', `(
         SELECT following_id FROM follows WHERE follower_id = '${user.id}'

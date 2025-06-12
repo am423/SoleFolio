@@ -38,7 +38,7 @@ export function UserList({ userId, type, title }: UserListProps) {
         : await socialAPI.getUserFollowing(userId)
 
       if (data) {
-        const userList = data.map(item => 
+        const userList = data.map((item: any) => 
           type === 'followers' ? item.follower : item.following
         ).filter(Boolean) as User[]
         

@@ -84,7 +84,7 @@ export function SneakerDetailDialog({ open, onClose, userSneaker, onOffer }: Sne
             <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden">
               {images.length > 0 ? (
                 <img
-                  src={images[currentImageIndex]}
+                  src={images[currentImageIndex] || ''}
                   alt={`${sneaker.brand} ${sneaker.model}`}
                   className="w-full h-full object-cover"
                 />
@@ -106,7 +106,7 @@ export function SneakerDetailDialog({ open, onClose, userSneaker, onOffer }: Sne
                     }`}
                   >
                     <img
-                      src={image}
+                      src={image || ''}
                       alt={`View ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
